@@ -1,28 +1,28 @@
-import express from "express";
-import userData from "../data/users.json" assert { type: "json" };
+import { Router } from "express";
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-const { auth, requiresAuth } = require("express-openid-connect");
 
-const router = express.Router();
-var webAuth = new auth.WebAuth({
-  domain: "dev-ve8rhfzib1f1o1gu.eu.auth0.com",
-  clientID: "tBWipe8DVFSSiIAKZQ22Lay5blJ6dF01",
-});
+const loginRouter = Router();
+const prisma = new PrismaClient();
 
-router.post("/", (req, res) => {
-  const secretKey = process.env.AUTH_SECRET_KEY || "my-secret-key";
-  const { username, password } = req.body;
-  const { users } = userData;
-  const user = users.find(
-    (u) => u.username === username && u.password === password
-  );
+loginRouter.post("/", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await prisma.user.findUnique({ where: { username } });
 
-  if (!user) {
-    return res.status(401).json({ message: "Invalid credentials!" });
+    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+      return res.status(401).json({ message: "Invalid credentials!" });
+    }
+
+    const secretKey = process.env.AUTH_SECRET_KEY || "my-secret-key";
+    const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: "1h" });
+
+    res.status(200).json({ message: "Successfully logged in!", token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error logging in");
   }
-
-  const token = jwt.sign({ userId: user.id }, secretKey);
-  res.status(200).json({ message: "Successfully logged in!", token });
 });
 
-export default router;
+export default loginRouter;

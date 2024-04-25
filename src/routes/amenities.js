@@ -6,10 +6,10 @@ import getAmenities from "../services/amenities/getAmenities.js";
 // import updateAmenityById from "../services/amenities/updateAmenityById.js";
 // import authMiddleware from "../middleware/advancedAuth.js";
 
-export const router = Router();
-console.log("amenities router");
-router.get("/", async (req, res) => {
-  console.log("GET");
+const amenitiesRouter = Router();
+console.log("getAmenities");
+
+amenitiesRouter.get("/", async (req, res) => {
   try {
     const { name } = req.query;
     const amenities = await getAmenities();
@@ -21,25 +21,26 @@ router.get("/", async (req, res) => {
       .status(500)
       .send("Something went wrong while getting list of amenities!");
   }
-  console.log(getAmenities());
 });
 
-router.get("/:id", (req, res) => {
-  try {
-    const id = req.id;
-    const amenity = getAmenityById(id);
-    console.log("amenity:", amenity);
-    if (!amenity) {
-      return res.status(404).json({ error: "Amenity not found" });
-    }
-    res.status(200).json(amenity);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Something went wrong while getting the amenity");
-  }
-});
+// amenitiesRouter.get("/:id", async (req, res) => {
+//   console.log("getAmenityById");
+//   try {
+//     const id = req.params.id;
+//     console.log(id);
+//     const amenity = await getAmenityById(id);
+//     console.log("amenity:", amenity);
+//     if (!amenity) {
+//       return res.status(404).json({ error: "Amenity not found" });
+//     }
+//     res.status(200).json(amenity);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Something went wrong while getting the amenity");
+//   }
+// });
 
-// router.put("/:id", authMiddleware, (req, res) => {
+// amenitiesRouter.put("/:id", authMiddleware, (req, res) => {
 //   try {
 //     const { id } = req.params;
 //     const { name } = req.body;
@@ -51,13 +52,13 @@ router.get("/:id", (req, res) => {
 //   }
 // });
 
-// router.post("/", authMiddleware, (req, res) => {
+// amenitiesRouter.post("/", authMiddleware, (req, res) => {
 //   const { id, name } = req.body;
 //   const newAmenity = createAmenity(id, name);
 //   res.status(201).json(newAmenity);
 // });
 
-// router.delete("/:id", authMiddleware, (req, res) => {
+// amenitiesRouter.delete("/:id", authMiddleware, (req, res) => {
 //   try {
 //     const { id } = req.params;
 //     const deletedAmenityId = deleteAmenity(id);
@@ -75,4 +76,4 @@ router.get("/:id", (req, res) => {
 //   }
 // });
 
-export default router;
+export default amenitiesRouter;

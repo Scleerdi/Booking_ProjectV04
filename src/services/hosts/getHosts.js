@@ -1,5 +1,10 @@
-import hostData from "../../data/hosts.json" assert { type: "json" };
+import { PrismaClient } from "@prisma/client";
 
-export const getHosts = () => {
-  return hostData;
+const getHosts = async () => {
+  const prisma = new PrismaClient();
+  const hosts = await prisma.host.findMany();
+
+  return hosts;
 };
+
+export default getHosts;
