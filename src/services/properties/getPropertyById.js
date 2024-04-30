@@ -1,5 +1,17 @@
-import propertyData from "../../data/properties.json";
+import { PrismaClient } from "@prisma/client";
 
-export const getPropertyById = (id) => {
-  return propertyData.properties.find((property) => property.id === id);
+const prisma = new PrismaClient();
+
+const getPropertyById = async (id) => {
+  try {
+    const property = await prisma.property.findUnique({
+      where: { id },
+    });
+    return property;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error fetching property by ID");
+  }
 };
+
+export default getPropertyById;

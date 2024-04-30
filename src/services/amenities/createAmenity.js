@@ -1,11 +1,23 @@
-//import amenityData from "../../data/amenities.json";
-import { v4 as uuid } from "uuid";
+import { PrismaClient } from "@prisma/client";
 
-export const createAmenity = (name) => {
-  const newAmenity = {
-    id: uuid(),
-    name,
-  };
-  amenityData.amenities.push(newAmenity);
-  return newAmenity;
+const prisma = new PrismaClient();
+
+const createAmenity = async (name) => {
+  try {
+    const newAmenity = await prisma.amenity.create({
+      data: {
+        name,
+      },
+    });
+    return newAmenity;
+  } catch (error) {
+    console.error("Error creating amenity:", error);
+    throw new Error("Error creating amenity");
+  }
 };
+
+export default createAmenity;
+
+/*
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer zeL5mutwEMNM1Mndjsmsbrhkx4WgeKv6" -d '{"id": "TempId-356", "name": "minibar"}' http://localhost:3000/amenities 
+*/

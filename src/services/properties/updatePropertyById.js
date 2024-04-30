@@ -1,6 +1,8 @@
-import propertyData from "../../data/properties.json";
+import { PrismaClient } from "@prisma/client";
 
-export const updatePropertyById = (
+const prisma = new PrismaClient();
+
+const updatePropertyById = async (
   id,
   title,
   description,
@@ -12,21 +14,37 @@ export const updatePropertyById = (
   hostId,
   rating
 ) => {
-  const property = propertyData.properties.find(
-    (property) => property.id === id
-  );
+  try {
+    const existingProperty = await prisma.property.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!existingProperty) {
+      throw new Error(`Property ${id} not found`);
+    }
+    const updatedProperty = await prisma.property.update({
+      where: {
+        id,
+      },
+      data: {
+        title: title ?? existingProperty.title,
+        description: description ?? existingProperty.description,
+        location: location ?? existingProperty.location,
+        pricePerNight: pricePerNight ?? existingProperty.pricePerNight,
+        bedroomCount: bedroomCount ?? existingProperty.bedroomCount,
+        bathRoomCount: bathRoomCount ?? existingProperty.bathRoomCount,
+        maxGuestCount: maxGuestCount ?? existingProperty.maxGuestCount,
+        hostId: hostId ?? existingProperty.hostId,
+        rating: rating ?? existingProperty.rating,
+      },
+    });
 
-  if (!property) throw new Error(`Property ${id} not found`);
-
-  property.title = title ?? property.title;
-  property.description = description ?? property.description;
-  property.location = location ?? property.location;
-  property.pricePerNight = pricePerNight ?? property.pricePerNight;
-  property.bedroomCount = bedroomCount ?? property.bedroomCount;
-  property.bathRoomCount = bathRoomCount ?? property.bathRoomCount;
-  property.maxGuestCount = maxGuestCount ?? property.maxGuestCount;
-  property.hostId = hostId ?? property.hostId;
-  property.rating = rating ?? property.rating;
-
-  return property;
+    return updatedProperty;
+  } catch (error) {
+    console.error("Error updating property:", error);
+    throw new Error("Error updating property");
+  }
 };
+
+export default updatePropertyById;

@@ -1,5 +1,17 @@
-import userData from "../../data/users.json";
+import { PrismaClient } from "@prisma/client";
 
-export const getUserById = (id) => {
-  return userData.users.find((users) => users.id === id);
+const prisma = new PrismaClient();
+
+const getUserById = async (id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+    return user;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error fetching user by ID");
+  }
 };
+
+export default getUserById;

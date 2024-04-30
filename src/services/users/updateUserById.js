@@ -1,6 +1,8 @@
-import userData from "../../data/users.json";
+import { PrismaClient } from "@prisma/client";
 
-export const updateUserById = (
+const prisma = new PrismaClient();
+
+export const updateUserById = async (
   id,
   username,
   password,
@@ -9,15 +11,34 @@ export const updateUserById = (
   phoneNumber,
   profilePicture
 ) => {
-  const user = userData.users.find((users) => users.id === id);
-  if (!user) throw new Error(`User ${id} not found`);
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!existingUser) {
+      throw new Error(`User ${id} not found`);
+    }
+    const updatedUser = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        username: username ?? existingUser.username,
+        password: password ?? existingUser.password,
+        name: name ?? existingUser.name,
+        email: email ?? existingUser.email,
+        phoneNumber: phoneNumber ?? existingUser.phoneNumber,
+        profilePicture: profilePicture ?? existingUser.profilePicture,
+      },
+    });
 
-  user.username = username ?? user.username;
-  user.password = password ?? user.password;
-  user.name = name ?? user.name;
-  user.email = email ?? user.email;
-  user.phoneNumber = phoneNumber ?? user.phoneNumber;
-  user.profilePicture = profilePicture ?? user.profilePicture;
-
-  return user;
+    return updatedUser;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw new Error("Error updating user");
+  }
 };
+
+export default updateUserById;

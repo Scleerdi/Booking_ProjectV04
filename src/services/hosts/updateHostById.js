@@ -1,6 +1,8 @@
-import hostData from "../../data/hosts.json";
+import { PrismaClient } from "@prisma/client";
 
-export const updateHostById = (
+const prisma = new PrismaClient();
+
+const updateHostById = async (
   id,
   username,
   password,
@@ -10,17 +12,35 @@ export const updateHostById = (
   profilePicture,
   aboutMe
 ) => {
-  const host = hostData.hosts.find((host) => host.id === id);
+  try {
+    const existingHost = await prisma.host.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!existingHost) {
+      throw new Error(`Host ${id} not found`);
+    }
+    const updatedHost = await prisma.host.update({
+      where: {
+        id,
+      },
+      data: {
+        username: username ?? existingHost.username,
+        password: password ?? existingHost.password,
+        name: name ?? existingHost.name,
+        email: email ?? existingHost.email,
+        phoneNumber: phoneNumber ?? existingHost.phoneNumber,
+        profilePicture: profilePicture ?? existingHost.profilePicture,
+        aboutMe: aboutMe ?? existingHost.aboutMe,
+      },
+    });
 
-  if (!host) throw new Error(`host ${id} not found`);
-
-  host.username = username ?? host.username;
-  host.password = password ?? host.password;
-  host.name = name ?? host.name;
-  host.email = email ?? host.email;
-  host.phoneNumber = phoneNumber ?? host.phoneNumber;
-  host.profilePicture = profilePicture ?? host.profilePicture;
-  host.aboutMe = aboutMe ?? host.aboutMe;
-
-  return host;
+    return updatedHost;
+  } catch (error) {
+    console.error("Error updating host:", error);
+    throw new Error("Error updating host");
+  }
 };
+
+export default updateHostById;

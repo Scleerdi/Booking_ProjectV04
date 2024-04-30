@@ -1,5 +1,17 @@
-import bookingData from "../../data/bookings.json";
+import { PrismaClient } from "@prisma/client";
 
-export const getBookingById = (id) => {
-  return bookingData.bookings.find((booking) => booking.id === id);
+const prisma = new PrismaClient();
+
+const getBookingById = async (id) => {
+  try {
+    const booking = await prisma.booking.findUnique({
+      where: { id },
+    });
+    return booking;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error fetching booking by ID");
+  }
 };
+
+export default getBookingById;
