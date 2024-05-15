@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const createHost = async (
+  id,
   username,
   password,
   name,
@@ -14,6 +15,7 @@ const createHost = async (
   try {
     const newHost = await prisma.host.create({
       data: {
+        id,
         username,
         password,
         name,
@@ -23,7 +25,7 @@ const createHost = async (
         aboutMe,
       },
     });
-
+    console.log("newHost", newHost);
     return newHost;
   } catch (error) {
     console.error("Error creating host:", error);

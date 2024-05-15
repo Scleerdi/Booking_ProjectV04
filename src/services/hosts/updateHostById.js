@@ -13,11 +13,13 @@ const updateHostById = async (
   aboutMe
 ) => {
   try {
+    //console.log("ID:", id);
     const existingHost = await prisma.host.findUnique({
       where: {
         id,
       },
     });
+    //console.log("existingHost:", existingHost);
     if (!existingHost) {
       throw new Error(`Host ${id} not found`);
     }
@@ -35,7 +37,7 @@ const updateHostById = async (
         aboutMe: aboutMe ?? existingHost.aboutMe,
       },
     });
-
+    //console.log("updatedhost:", updatedHost);
     return updatedHost;
   } catch (error) {
     console.error("Error updating host:", error);

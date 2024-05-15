@@ -2,10 +2,11 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const createAmenity = async (name) => {
+const createAmenity = async (id, name) => {
   try {
     const newAmenity = await prisma.amenity.create({
       data: {
+        id,
         name,
       },
     });
@@ -17,7 +18,3 @@ const createAmenity = async (name) => {
 };
 
 export default createAmenity;
-
-/*
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer zeL5mutwEMNM1Mndjsmsbrhkx4WgeKv6" -d '{"id": "TempId-356", "name": "minibar"}' http://localhost:3000/amenities 
-*/

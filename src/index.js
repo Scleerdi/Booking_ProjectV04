@@ -12,6 +12,7 @@ import "dotenv/config.js";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
 
 const app = express();
+app.use(express.json());
 
 Sentry.init({
   dsn: "https://e49c9a0dc7d523f5bd24cd9f1472c483@o4506898858115072.ingest.us.sentry.io/4506898874630144",
@@ -45,5 +46,5 @@ app.use("/login", loginRouter);
 
 // Start the server
 app.listen(3000, () => {
-  console.log("Server is listening on port 3000");
+  //console.log("Server is listening on port 3000");
 });
