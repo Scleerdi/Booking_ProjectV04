@@ -1,15 +1,15 @@
 import { auth } from "express-openid-connect";
-import express from "express";
+import dotenv from "dotenv";
 
-// Initialize Express.js application
-const app = express();
+// Load environment variables from .env file
+dotenv.config();
 
 // Define authentication middleware
 const authMiddleware = auth({
-  issuerBaseURL: "https://dev-ve8rhfzib1f1o1gu.eu.auth0.com/",
-  baseURL: "http://localhost:3000",
-  clientID: "zeL5mutwEMNM1Mndjsmsbrhkx4WgeKv6",
-  secret: "GPLryxC0rjnY20obTD9PpstEyGnH8Xlpm99GX4c_YlBUa5InX-_V9j8mQAFkdcTg",
+  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
+  baseURL: process.env.AUTH0_BASE_URL,
+  clientID: process.env.AUTH0_CLIENT_ID,
+  secret: process.env.AUTH0_SECRET,
 });
 
 export default authMiddleware;
