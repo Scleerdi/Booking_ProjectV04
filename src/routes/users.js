@@ -14,17 +14,17 @@ usersRouter.post("/", async (req, res) => {
     const { username, password, name, email, phoneNumber, profilePicture } =
       req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    //const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("REQBODY:", req.body);
     const newUser = await createUser(
       username,
-      hashedPassword,
+      password,
       name,
       email,
       phoneNumber,
       profilePicture
     );
-
+    console.log("USER:", newUser);
     res.status(201).json(newUser);
   } catch (error) {
     console.error("Error creating user:", error);

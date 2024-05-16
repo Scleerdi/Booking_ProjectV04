@@ -75,7 +75,7 @@ bookingsRouter.get("/:id", async (req, res) => {
     const booking = await getBookingById(id);
 
     if (!booking) {
-      return res.status(404).send(`Booking ${id} not found`);
+      res.status(404).send(`Booking ${id} not found`);
     } else {
       res.status(200).json(booking);
     }
@@ -91,7 +91,6 @@ bookingsRouter.put(
     try {
       const { id } = req.params;
       const {
-        userId,
         propertyId,
         checkinDate,
         checkoutDate,
@@ -101,7 +100,7 @@ bookingsRouter.put(
       } = req.body;
       const updatedBooking = await updateBookingById(
         id,
-        userId,
+
         propertyId,
         checkinDate,
         checkoutDate,
@@ -109,8 +108,18 @@ bookingsRouter.put(
         totalPrice,
         bookingStatus
       );
-      console.log("updatedBooking", updatedBooking);
-      if (updatedBooking) res.status(200).json(updatedBooking);
+      console.log("------PROPERTYID", propertyId);
+      console.log("------UPDATEDBOOKING", updatedBooking);
+      if (updatedBooking) {
+        res.status(200).send({
+          message: `Booking with id ${id} successfully updated`,
+          updatedBooking,
+        });
+      } else {
+        res.status(404).json({
+          message: `Booking with id ${id} not found`,
+        });
+      }
     } catch (error) {
       console.error(error);
       res.status(500).send("Booking failed to update by Id");

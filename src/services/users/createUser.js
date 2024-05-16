@@ -11,6 +11,15 @@ const createUser = async (
   profilePicture
 ) => {
   try {
+    console.log(
+      "createUser:",
+      username,
+      password,
+      name,
+      email,
+      phoneNumber,
+      profilePicture
+    );
     const newUser = await prisma.user.create({
       data: {
         username,
@@ -21,7 +30,7 @@ const createUser = async (
         profilePicture,
       },
     });
-
+    console.log("NEWUSER:", newUser);
     return newUser;
   } catch (error) {
     console.error("Error creating user:", error);
