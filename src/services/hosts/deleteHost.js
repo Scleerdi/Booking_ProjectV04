@@ -13,13 +13,11 @@ const deleteHost = async (id) => {
     if (!existingHost) {
       return null;
     }
-    console.log("delete id:", id);
     const ans = await prisma.host.delete({
       where: {
         id,
       },
     });
-    ////console.log("ans:", ans);
     return id;
   } catch (error) {
     console.error("Error deleting host:", error);

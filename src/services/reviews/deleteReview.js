@@ -18,7 +18,6 @@ const deleteReview = async (id) => {
         id,
       },
     });
-
     return id;
   } catch (error) {
     console.error("Error deleting review:", error);

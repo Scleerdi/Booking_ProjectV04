@@ -7,7 +7,6 @@ import deleteHost from "../services/hosts/deleteHost.js";
 //import authMiddleware from "../middleware/advancedAuth.js";
 
 const hostsRouter = Router();
-////console.log("getHosts");
 
 hostsRouter.post(
   "/",
@@ -23,7 +22,6 @@ hostsRouter.post(
         profilePicture,
         aboutMe,
       } = req.body;
-      console.log("id:", id);
       const newHost = await createHost(
         id,
         username,
@@ -115,7 +113,6 @@ hostsRouter.put(
         profilePicture,
         aboutMe
       );
-      ////console.log("uh", updatedHost);
       res.status(200).json(updatedHost);
     } catch (error) {
       console.error(error);

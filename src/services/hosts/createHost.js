@@ -25,7 +25,6 @@ const createHost = async (
         aboutMe,
       },
     });
-    console.log("newHost", newHost);
     return newHost;
   } catch (error) {
     console.error("Error creating host:", error);

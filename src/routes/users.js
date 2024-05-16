@@ -7,7 +7,6 @@ import updateUserById from "../services/users/updateUserById.js";
 //import /*authMiddleware*/from "../middleware/advancedAuth.js";
 
 const usersRouter = Router();
-////console.log("getUsers");
 
 usersRouter.post("/", async (req, res) => {
   try {
@@ -15,7 +14,6 @@ usersRouter.post("/", async (req, res) => {
       req.body;
 
     //const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("REQBODY:", req.body);
     const newUser = await createUser(
       username,
       password,
@@ -24,7 +22,6 @@ usersRouter.post("/", async (req, res) => {
       phoneNumber,
       profilePicture
     );
-    console.log("USER:", newUser);
     res.status(201).json(newUser);
   } catch (error) {
     console.error("Error creating user:", error);
@@ -56,7 +53,6 @@ usersRouter.delete(
 usersRouter.get("/", async (req, res) => {
   try {
     const users = await getUsers();
-    ////console.log(users);
     res.status(200).json(users);
   } catch (error) {
     console.error(error);

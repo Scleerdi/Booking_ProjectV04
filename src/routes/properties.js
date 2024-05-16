@@ -7,7 +7,6 @@ import updatePropertyById from "../services/properties/updatePropertyById.js";
 //import /*authMiddleware*/from "../middleware/advancedAuth.js";
 
 const propertiesRouter = express.Router();
-////console.log("getProperties");
 
 propertiesRouter.post(
   "/",
@@ -24,7 +23,6 @@ propertiesRouter.post(
         hostId,
         rating,
       } = req.body;
-      console.log("WE GET HERE");
       const newProperty = await createProperty(
         title,
         description,
@@ -49,7 +47,6 @@ propertiesRouter.delete(
   /*authMiddleware*/ async (req, res) => {
     try {
       const { id } = req.params;
-      //console.log("property ID:", id);
       const deletedPropertyId = await deleteProperty(id);
 
       if (!deletedPropertyId) {
@@ -70,7 +67,6 @@ propertiesRouter.get("/", async (req, res) => {
   try {
     const { aboutMe } = req.query;
     const properties = await getProperties(aboutMe);
-    ////console.log("properties:", properties);
     res.status(200).json(properties);
   } catch (error) {
     console.error(error);

@@ -32,8 +32,8 @@ bookingsRouter.post(
       );
       res.status(201).json(newBooking);
     } catch (error) {
-      console.error("Error creating amenity:", error);
-      res.status(400).json({ message: "Error creating amenity" });
+      console.error("Error creating booking:", error);
+      res.status(400).json({ message: "Error creating booking" });
     }
   }
 );
@@ -53,7 +53,7 @@ bookingsRouter.delete(
       }
     } catch (error) {
       console.error(error);
-      res.status(500).send("Deleting booking ${id} failed");
+      res.status(404).send("Deleting booking ${id} failed");
     }
   }
 );
@@ -61,7 +61,6 @@ bookingsRouter.delete(
 bookingsRouter.get("/", async (req, res) => {
   try {
     const bookings = await getBookings();
-    console.log("bookings", bookings);
     res.status(200).json(bookings);
   } catch (error) {
     console.error(error);
@@ -108,8 +107,6 @@ bookingsRouter.put(
         totalPrice,
         bookingStatus
       );
-      console.log("------PROPERTYID", propertyId);
-      console.log("------UPDATEDBOOKING", updatedBooking);
       if (updatedBooking) {
         res.status(200).send({
           message: `Booking with id ${id} successfully updated`,
@@ -122,7 +119,7 @@ bookingsRouter.put(
       }
     } catch (error) {
       console.error(error);
-      res.status(500).send("Booking failed to update by Id");
+      res.status(404).send("Booking failed to update by Id");
     }
   }
 );

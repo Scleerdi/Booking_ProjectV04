@@ -7,7 +7,6 @@ import updateAmenityById from "../services/amenities/updateAmenityById.js";
 //import authMiddlewarefrom "../middleware/advancedAuth.js";
 
 const amenitiesRouter = Router();
-////console.log("getAmenities");
 
 amenitiesRouter.post(
   "/",
@@ -15,8 +14,6 @@ amenitiesRouter.post(
     try {
       const { id, name } = req.body;
       const newAmenity = await createAmenity(id, name);
-      ////console.log("CREATE");
-      ////console.log(newAmenity);
       res.status(201).json(newAmenity);
     } catch (error) {
       console.error("Error creating amenity:", error);
@@ -51,7 +48,6 @@ amenitiesRouter.delete(
 amenitiesRouter.get("/", async (req, res) => {
   try {
     const amenities = await getAmenities();
-    ////console.log("amenities", amenities);
     res.status(200).json(amenities);
   } catch (error) {
     console.error(error);
@@ -62,12 +58,9 @@ amenitiesRouter.get("/", async (req, res) => {
 });
 
 amenitiesRouter.get("/:id", async (req, res) => {
-  ////console.log("getAmenityById");
   try {
     const id = req.params.id;
-    ////console.log(id);
     const amenity = await getAmenityById(id);
-    ////console.log("amenity:", amenity);
     if (!amenity) {
       return res.status(404).json({ error: "Amenity not found" });
     }
@@ -86,7 +79,6 @@ amenitiesRouter.put(
       const { name } = req.body;
 
       const updatedAmenity = await updateAmenityById(id, name);
-      ////console.log(updatedAmenity);
       res.status(200).json(updatedAmenity);
     } catch (error) {
       console.error(error);
