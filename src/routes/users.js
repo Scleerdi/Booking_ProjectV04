@@ -7,34 +7,40 @@ import updateUserById from "../services/users/updateUserById.js";
 //import /*authMiddleware*/from "../middleware/advancedAuth.js";
 
 const usersRouter = Router();
-//console.log("getUsers");
+////console.log("getUsers");
 
-usersRouter.post(
-  "/",
-  /*authMiddleware*/ async (req, res) => {
+usersRouter.post("/", async (req, res) => {
+  try {
     const { username, password, name, email, phoneNumber, profilePicture } =
       req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await createUser(
       username,
-      password,
+      hashedPassword,
       name,
       email,
       phoneNumber,
       profilePicture
     );
+
     res.status(201).json(newUser);
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(400).json({ message: "Error creating user" });
   }
-);
+});
 
 usersRouter.delete(
   "/:id",
-  /*authMiddleware*/ (req, res) => {
+  /*authMiddleware*/ async (req, res) => {
     try {
       const { id } = req.params;
-      const deletedUserId = deleteUser(id);
+      const deletedUserId = await deleteUser(id);
 
-      if (!deletedUserId) {
-        res.status(404).send(`User with id ${id} was not found!`);
+      if (deletedUserId == null) {
+        res.status(404).send(`User not found!`);
       } else {
         res.status(200).json({
           message: `User with id ${deletedUserId} was deleted!`,
@@ -50,7 +56,7 @@ usersRouter.delete(
 usersRouter.get("/", async (req, res) => {
   try {
     const users = await getUsers();
-    //console.log(users);
+    ////console.log(users);
     res.status(200).json(users);
   } catch (error) {
     console.error(error);
@@ -93,7 +99,7 @@ usersRouter.put(
       res.status(200).json(updatedUser);
     } catch (error) {
       console.error(error);
-      res.status(500).send("Something went wrong while updating user by id!");
+      res.status(404).send("Something went wrong while updating user by id!");
     }
   }
 );

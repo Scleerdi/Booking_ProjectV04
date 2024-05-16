@@ -10,8 +10,7 @@ loginRouter.post("/", async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await prisma.user.findUnique({ where: { username } });
-
-    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+    if (!user || (await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid credentials!" });
     }
 
@@ -21,7 +20,7 @@ loginRouter.post("/", async (req, res) => {
     res.status(200).json({ message: "Successfully logged in!", token });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error logging in");
+    res.status(401).send("Error logging in");
   }
 });
 

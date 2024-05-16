@@ -11,28 +11,32 @@ const bookingsRouter = Router();
 bookingsRouter.post(
   "/",
   /*authMiddleware*/ async (req, res) => {
-    const {
-      userId,
-      propertyId,
-      checkinDate,
-      checkoutDate,
-      numberOfGuests,
-      totalPrice,
-      bookingStatus,
-    } = req.body;
-    const newBooking = await createBooking(
-      userId,
-      propertyId,
-      checkinDate,
-      checkoutDate,
-      numberOfGuests,
-      totalPrice,
-      bookingStatus
-    );
-    res.status(201).json(newBooking);
+    try {
+      const {
+        userId,
+        propertyId,
+        checkinDate,
+        checkoutDate,
+        numberOfGuests,
+        totalPrice,
+        bookingStatus,
+      } = req.body;
+      const newBooking = await createBooking(
+        userId,
+        propertyId,
+        checkinDate,
+        checkoutDate,
+        numberOfGuests,
+        totalPrice,
+        bookingStatus
+      );
+      res.status(201).json(newBooking);
+    } catch (error) {
+      console.error("Error creating amenity:", error);
+      res.status(400).json({ message: "Error creating amenity" });
+    }
   }
 );
-
 bookingsRouter.delete(
   "/:id",
   /*authMiddleware*/ async (req, res) => {
@@ -57,7 +61,7 @@ bookingsRouter.delete(
 bookingsRouter.get("/", async (req, res) => {
   try {
     const bookings = await getBookings();
-    //console.log("bookings", bookings);
+    console.log("bookings", bookings);
     res.status(200).json(bookings);
   } catch (error) {
     console.error(error);
@@ -69,10 +73,12 @@ bookingsRouter.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const booking = await getBookingById(id);
+
     if (!booking) {
       return res.status(404).send(`Booking ${id} not found`);
+    } else {
+      res.status(200).json(booking);
     }
-    res.status(200).json(booking);
   } catch (error) {
     console.error("Error fetching booking by ID:", error);
     res.status(500).send("Error fetching booking by ID");
@@ -103,7 +109,8 @@ bookingsRouter.put(
         totalPrice,
         bookingStatus
       );
-      res.status(200).json(updatedBooking);
+      console.log("updatedBooking", updatedBooking);
+      if (updatedBooking) res.status(200).json(updatedBooking);
     } catch (error) {
       console.error(error);
       res.status(500).send("Booking failed to update by Id");

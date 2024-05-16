@@ -9,8 +9,7 @@ const deleteUser = async (id) => {
         id,
       },
     });
-
-    if (!existingUser) {
+    if (existingUser == null) {
       return null;
     }
     await prisma.user.delete({

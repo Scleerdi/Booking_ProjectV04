@@ -7,34 +7,40 @@ import updatePropertyById from "../services/properties/updatePropertyById.js";
 //import /*authMiddleware*/from "../middleware/advancedAuth.js";
 
 const propertiesRouter = express.Router();
-//console.log("getProperties");
+////console.log("getProperties");
 
 propertiesRouter.post(
   "/",
   /*authMiddleware*/ async (req, res) => {
-    const {
-      title,
-      description,
-      location,
-      pricePerNight,
-      bedroomCount,
-      bathRoomCount,
-      maxGuestCount,
-      hostId,
-      rating,
-    } = req.body;
-    const newProperty = await createProperty(
-      title,
-      description,
-      location,
-      pricePerNight,
-      bedroomCount,
-      bathRoomCount,
-      maxGuestCount,
-      hostId,
-      rating
-    );
-    res.status(201).json(newProperty);
+    try {
+      const {
+        title,
+        description,
+        location,
+        pricePerNight,
+        bedroomCount,
+        bathRoomCount,
+        maxGuestCount,
+        hostId,
+        rating,
+      } = req.body;
+      console.log("WE GET HERE");
+      const newProperty = await createProperty(
+        title,
+        description,
+        location,
+        pricePerNight,
+        bedroomCount,
+        bathRoomCount,
+        maxGuestCount,
+        hostId,
+        rating
+      );
+      res.status(201).json(newProperty);
+    } catch (error) {
+      console.error("Error creating property:", error);
+      res.status(400).json({ message: "Error creating property" });
+    }
   }
 );
 
@@ -43,7 +49,7 @@ propertiesRouter.delete(
   /*authMiddleware*/ async (req, res) => {
     try {
       const { id } = req.params;
-      console.log("property ID:", id);
+      //console.log("property ID:", id);
       const deletedPropertyId = await deleteProperty(id);
 
       if (!deletedPropertyId) {
@@ -64,7 +70,7 @@ propertiesRouter.get("/", async (req, res) => {
   try {
     const { aboutMe } = req.query;
     const properties = await getProperties(aboutMe);
-    //console.log("properties:", properties);
+    ////console.log("properties:", properties);
     res.status(200).json(properties);
   } catch (error) {
     console.error(error);
@@ -84,7 +90,7 @@ propertiesRouter.get("/:id", async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send("Host not found by Id");
+    res.status(500).send("Error finding property by Id");
   }
 });
 
@@ -119,7 +125,7 @@ propertiesRouter.put(
       res.status(200).json(updatedProperty);
     } catch (error) {
       console.error(error);
-      res.status(500).send("Property failed to update by Id");
+      res.status(404).send("Property failed to update by Id");
     }
   }
 );

@@ -7,16 +7,21 @@ import updateAmenityById from "../services/amenities/updateAmenityById.js";
 //import authMiddlewarefrom "../middleware/advancedAuth.js";
 
 const amenitiesRouter = Router();
-//console.log("getAmenities");
+////console.log("getAmenities");
 
 amenitiesRouter.post(
   "/",
   /*authMiddleware*/ async (req, res) => {
-    const { id, name } = req.body;
-    const newAmenity = await createAmenity(id, name);
-    //console.log("CREATE");
-    //console.log(newAmenity);
-    res.status(201).json(newAmenity);
+    try {
+      const { id, name } = req.body;
+      const newAmenity = await createAmenity(id, name);
+      ////console.log("CREATE");
+      ////console.log(newAmenity);
+      res.status(201).json(newAmenity);
+    } catch (error) {
+      console.error("Error creating amenity:", error);
+      res.status(400).json({ message: "Error creating amenity" });
+    }
   }
 );
 
@@ -33,7 +38,6 @@ amenitiesRouter.delete(
         res.status(200).json({
           message: `Amenity with id ${deletedAmenityId} was deleted!`,
         });
-        s;
       }
     } catch (error) {
       console.error(error);
@@ -47,7 +51,7 @@ amenitiesRouter.delete(
 amenitiesRouter.get("/", async (req, res) => {
   try {
     const amenities = await getAmenities();
-    //console.log("amenities", amenities);
+    ////console.log("amenities", amenities);
     res.status(200).json(amenities);
   } catch (error) {
     console.error(error);
@@ -58,12 +62,12 @@ amenitiesRouter.get("/", async (req, res) => {
 });
 
 amenitiesRouter.get("/:id", async (req, res) => {
-  //console.log("getAmenityById");
+  ////console.log("getAmenityById");
   try {
     const id = req.params.id;
-    //console.log(id);
+    ////console.log(id);
     const amenity = await getAmenityById(id);
-    //console.log("amenity:", amenity);
+    ////console.log("amenity:", amenity);
     if (!amenity) {
       return res.status(404).json({ error: "Amenity not found" });
     }
@@ -82,12 +86,12 @@ amenitiesRouter.put(
       const { name } = req.body;
 
       const updatedAmenity = await updateAmenityById(id, name);
-      //console.log(updatedAmenity);
+      ////console.log(updatedAmenity);
       res.status(200).json(updatedAmenity);
     } catch (error) {
       console.error(error);
       res
-        .status(500)
+        .status(404)
         .send("Something went wrong while updating amenity by id!");
     }
   }

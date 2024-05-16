@@ -27,7 +27,6 @@ const createProperty = async (
         rating,
       },
     });
-
     return newProperty;
   } catch (error) {
     console.error("Error creating property:", error);

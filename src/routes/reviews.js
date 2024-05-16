@@ -7,12 +7,17 @@ import updateReviewById from "../services/reviews/updateReviewById.js";
 //import /*authMiddleware*/from "../middleware/advancedAuth.js";
 
 const reviewsRouter = Router();
-//console.log("getReviews");
+////console.log("getReviews");
 
 reviewsRouter.post("/", async (req, res) => {
-  const { userId, propertyId, rating, comment } = req.body;
-  const newReview = await createReview(userId, propertyId, rating, comment);
-  res.status(201).json(newReview);
+  try {
+    const { userId, propertyId, rating, comment } = req.body;
+    const newReview = await createReview(userId, propertyId, rating, comment);
+    res.status(201).json(newReview);
+  } catch (error) {
+    console.error("Error creating booking:", error);
+    res.status(400).json({ message: "Error creating booking" });
+  }
 });
 
 reviewsRouter.delete(
@@ -40,7 +45,7 @@ reviewsRouter.get("/", async (req, res) => {
   try {
     const { comment } = req.query;
     const reviews = await getReviews(comment);
-    //console.log("reviews:", reviews);
+    ////console.log("reviews:", reviews);
     res.status(200).json(reviews);
   } catch (error) {
     console.error(error);

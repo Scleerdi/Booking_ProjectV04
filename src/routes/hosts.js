@@ -7,33 +7,38 @@ import deleteHost from "../services/hosts/deleteHost.js";
 //import authMiddleware from "../middleware/advancedAuth.js";
 
 const hostsRouter = Router();
-//console.log("getHosts");
+////console.log("getHosts");
 
 hostsRouter.post(
   "/",
   /*authMiddleware*/ async (req, res) => {
-    const {
-      id,
-      username,
-      password,
-      name,
-      email,
-      phoneNumber,
-      profilePicture,
-      aboutMe,
-    } = req.body;
-    console.log("id:", id);
-    const newHost = await createHost(
-      id,
-      username,
-      password,
-      name,
-      email,
-      phoneNumber,
-      profilePicture,
-      aboutMe
-    );
-    res.status(201).json(newHost);
+    try {
+      const {
+        id,
+        username,
+        password,
+        name,
+        email,
+        phoneNumber,
+        profilePicture,
+        aboutMe,
+      } = req.body;
+      console.log("id:", id);
+      const newHost = await createHost(
+        id,
+        username,
+        password,
+        name,
+        email,
+        phoneNumber,
+        profilePicture,
+        aboutMe
+      );
+      res.status(201).json(newHost);
+    } catch (error) {
+      console.error("Error creating host:", error);
+      res.status(400).json({ message: "Error creating host" });
+    }
   }
 );
 
@@ -100,10 +105,6 @@ hostsRouter.put(
         aboutMe,
       } = req.body;
 
-      // console.log("un", username);
-      // console.log("pw", password);
-      // console.log("n", name);
-
       const updatedHost = await updateHostById(
         id,
         username,
@@ -114,11 +115,11 @@ hostsRouter.put(
         profilePicture,
         aboutMe
       );
-      //console.log("uh", updatedHost);
+      ////console.log("uh", updatedHost);
       res.status(200).json(updatedHost);
     } catch (error) {
       console.error(error);
-      res.status(500).send("Host failed to update by Id");
+      res.status(404).send("Host failed to update by Id");
     }
   }
 );
