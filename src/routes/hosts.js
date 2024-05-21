@@ -57,8 +57,8 @@ hostsRouter.delete("/:id", authMiddleware, async (req, res) => {
 
 hostsRouter.get("/", async (req, res) => {
   try {
-    const { aboutMe } = req.query;
-    const hosts = await getHosts();
+    const { name } = req.query;
+    const hosts = await getHosts(name);
     res.status(200).json(hosts);
   } catch (error) {
     console.error(error);

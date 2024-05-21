@@ -12,7 +12,7 @@ const createReview = async (userId, propertyId, rating, comment) => {
         comment,
       },
     });
-
+    if (!newReview.propertyId) return null;
     return newReview;
   } catch (error) {
     console.error("Error creating review:", error);

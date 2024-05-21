@@ -12,7 +12,11 @@ reviewsRouter.post("/", async (req, res) => {
   try {
     const { userId, propertyId, rating, comment } = req.body;
     const newReview = await createReview(userId, propertyId, rating, comment);
-    res.status(201).json(newReview);
+    if (!newReview) {
+      res.status(401).json({ message: "Error creating booking" });
+    } else {
+      res.status(201).json(newReview);
+    }
   } catch (error) {
     console.error("Error creating booking:", error);
     res.status(400).json({ message: "Error creating booking" });

@@ -59,8 +59,8 @@ propertiesRouter.delete("/:id", authMiddleware, async (req, res) => {
 
 propertiesRouter.get("/", async (req, res) => {
   try {
-    const { aboutMe } = req.query;
-    const properties = await getProperties(aboutMe);
+    const { location, pricePerNight } = req.query;
+    const properties = await getProperties(location, pricePerNight);
     res.status(200).json(properties);
   } catch (error) {
     console.error(error);
