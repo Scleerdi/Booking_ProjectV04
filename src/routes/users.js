@@ -88,7 +88,11 @@ usersRouter.put("/:id", authMiddleware, async (req, res) => {
       phoneNumber,
       profilePicture
     );
-    res.status(200).json(updatedUser);
+    if (!updatedUser) {
+      res.status(401).send("Something went wrong while updating user by id!");
+    } else {
+      res.status(200).json(updatedUser);
+    }
   } catch (error) {
     console.error(error);
     res.status(404).send("Something went wrong while updating user by id!");

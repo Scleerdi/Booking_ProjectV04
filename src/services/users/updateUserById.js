@@ -34,6 +34,7 @@ export const updateUserById = async (
       },
     });
 
+    console.log("UPDATEDUSER", updatedUser);
     return updatedUser;
   } catch (error) {
     console.error("Error updating user:", error);
